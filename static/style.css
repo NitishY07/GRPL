@@ -282,3 +282,79 @@ body {
 .shape-birdie { border-color: #ef4444; border-radius: 50%; width: 28px; height: 28px; } /* Red Circle */
 .shape-bogey { border-color: #3b82f6; width: 26px; height: 26px; } /* Blue Square */
 .shape-double { border-color: #0f172a; background: rgba(0,0,0,0.8); width: 26px; height: 26px; } /* Black Square */
+/* Player on Hole Graphic */
+.hole-graphic-layout {
+    position: fixed !important;
+    top: 50px !important;
+    right: 50px !important;
+    width: 350px !important;
+    max-width: 350px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    background: transparent !important;
+    border: none !important;
+    transform: translateX(50px);
+}
+.hole-graphic-layout .gfx-header { display: none; }
+
+.ph-top-row {
+    display: flex;
+    height: 40px;
+}
+.ph-name {
+    background: #0f2b5b; /* dark blue */
+    color: white;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.ph-score {
+    background: #b51c35; /* red */
+    color: white;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+.ph-mid-row {
+    display: flex;
+    background: #d9d9d9;
+    height: 30px;
+    align-items: center;
+    padding: 0 15px;
+    justify-content: space-between;
+}
+.ph-hole-label {
+    color: #333;
+    font-size: 16px;
+    font-weight: 900;
+}
+.ph-shots-tracker {
+    display: flex;
+    gap: 8px;
+    font-size: 16px;
+}
+.shot-dim { color: #999; font-weight: bold; }
+.shot-active { color: #000; font-weight: 900; }
+.ph-bot-row {
+    background: white;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ph-action {
+    color: #333;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+}

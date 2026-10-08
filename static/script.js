@@ -178,6 +178,24 @@ function renderGFX() {
             scorecard.innerHTML = scHtml;
         }
     }
+    else if (currentGfxType === 'player_hole') {
+        const p = individualData.find(x => x.user_id === currentSpotlightId);
+        if (p) {
+            document.getElementById('ph-name').textContent = (p.lastname || p.firstname).toUpperCase();
+            document.getElementById('ph-score').textContent = p.over_display;
+            document.getElementById('ph-score').style.background = (p.to_par < 0) ? '#b51c35' : (p.to_par > 0 ? '#3b82f6' : '#94a3b8');
+            
+            const hole = p.updated_hole || '1';
+            let suffix = 'TH';
+            if(hole.endsWith('1') && hole !== '11') suffix = 'ST';
+            else if(hole.endsWith('2') && hole !== '12') suffix = 'ND';
+            else if(hole.endsWith('3') && hole !== '13') suffix = 'RD';
+            document.getElementById('ph-hole-label').textContent = `${hole}${suffix} HOLE`;
+            
+            // Dummy logic for 'FOR BIRDIE'
+            document.getElementById('ph-action').textContent = (p.to_par < 0) ? "FOR BIRDIE" : "FOR PAR";
+        }
+    }
 }
 
 async function pollState() {
@@ -200,7 +218,7 @@ async function pollState() {
             currentSpotlightId = state.spotlight_player_id;
             
             // Adjust layouts
-            gfxContainer.classList.remove('ticker-layout', 'mini-layout');
+            gfxContainer.classList.remove('ticker-layout', 'mini-layout', 'hole-graphic-layout');
             document.getElementById('gfx-header').style.display = 'flex';
             
             if (currentGfxType && currentGfxType.includes('ticker')) {
@@ -208,6 +226,9 @@ async function pollState() {
                 document.getElementById('gfx-header').style.display = 'none';
             } else if (currentGfxType === 'mini_team_table') {
                 gfxContainer.classList.add('mini-layout');
+                document.getElementById('gfx-header').style.display = 'none';
+            } else if (currentGfxType === 'player_hole') {
+                gfxContainer.classList.add('hole-graphic-layout');
                 document.getElementById('gfx-header').style.display = 'none';
             }
             
