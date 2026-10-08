@@ -33,10 +33,10 @@ body {
     margin: 0;
     padding: 40px;
     font-family: 'Marble', 'Roboto', sans-serif;
-    /* You can drop a file named 'bg.jpg' in the static folder to see it as a background here! */
-    background: url('bg.jpg') no-repeat center center fixed;
+    /* You can drop a file named 'bg.png' in the static folder to see it as a background here! */
+    background: url('bg.png') no-repeat center center fixed;
     background-size: cover;
-    background-color: transparent; /* Fallback for vMix if bg.jpg is missing */
+    background-color: transparent; /* Fallback for vMix if bg.png is missing */
     color: var(--text-color);
 }
 
