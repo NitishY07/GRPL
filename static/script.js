@@ -62,8 +62,8 @@ function renderGFX() {
     // Set active view
     document.querySelectorAll('.gfx-view').forEach(el => el.classList.remove('active'));
     
-    if (currentGfxType === 'combo_spotlight_mini') {
-        const p = document.getElementById('gfx-player_spotlight');
+    if (currentGfxType === 'combo_hole_mini') {
+        const p = document.getElementById('gfx-player_hole');
         const m = document.getElementById('gfx-mini_team_table');
         if (p) p.classList.add('active');
         if (m) m.classList.add('active');
@@ -89,7 +89,7 @@ function renderGFX() {
         });
     }
     
-    if (currentGfxType === 'mini_team_table' || currentGfxType === 'combo_spotlight_mini') {
+    if (currentGfxType === 'mini_team_table' || currentGfxType === 'combo_hole_mini') {
         const tbody = document.getElementById('mini-team-body');
         tbody.innerHTML = '';
         teamData.forEach(team => {
@@ -114,7 +114,8 @@ function renderGFX() {
         }).join('');
         ticker.innerHTML = content + content; // Duplicate for seamless loop
     }
-    else if (currentGfxType === 'individual_table') {
+    
+    if (currentGfxType === 'individual_table') {
         document.getElementById('gfx-subtitle').textContent = 'INDIVIDUAL LEADERS (TOP 20)';
         const tbody = document.getElementById('individual-body');
         tbody.innerHTML = '';
@@ -129,7 +130,8 @@ function renderGFX() {
                 </tr>`;
         });
     }
-    else if (currentGfxType === 'individual_ticker') {
+    
+    if (currentGfxType === 'individual_ticker') {
         const ticker = document.getElementById('individual-ticker-body');
         const content = individualData.slice(0, 20).map(p => 
             `<div class="ticker-item"><span style="color:#94a3b8">#${p.position}</span> ${p.firstname} ${p.lastname} <span class="${getScoreClass(p.to_par)}">${p.over_display}</span></div>`
@@ -137,7 +139,7 @@ function renderGFX() {
         ticker.innerHTML = content + content; // Duplicate for seamless loop
     }
     
-    if (currentGfxType === 'player_spotlight' || currentGfxType === 'combo_spotlight_mini') {
+    if (currentGfxType === 'player_spotlight') {
         document.getElementById('gfx-subtitle').textContent = 'PLAYER SPOTLIGHT';
         const p = individualData.find(x => x.user_id === currentSpotlightId);
         if (p) {
@@ -151,7 +153,8 @@ function renderGFX() {
             document.getElementById('spotlight-hole').textContent = p.updated_hole || '-';
         }
     }
-    else if (currentGfxType === 'player_hole') {
+    
+    if (currentGfxType === 'player_hole' || currentGfxType === 'combo_hole_mini') {
         const p = individualData.find(x => x.user_id === currentSpotlightId);
         if (p) {
             document.getElementById('ph-name').textContent = (p.lastname || p.firstname).toUpperCase();
@@ -202,11 +205,11 @@ async function pollState() {
                 gfxContainer.style.background = 'transparent';
                 gfxContainer.style.border = 'none';
                 gfxContainer.style.boxShadow = 'none';
-            } else if (currentGfxType === 'combo_spotlight_mini') {
-                document.getElementById('gfx-header').style.display = 'flex';
-                gfxContainer.style.background = '';
-                gfxContainer.style.border = '';
-                gfxContainer.style.boxShadow = '';
+            } else if (currentGfxType === 'combo_hole_mini') {
+                document.getElementById('gfx-header').style.display = 'none';
+                gfxContainer.style.background = 'transparent';
+                gfxContainer.style.border = 'none';
+                gfxContainer.style.boxShadow = 'none';
             } else if (currentGfxType === 'player_hole') {
                 gfxContainer.classList.add('hole-graphic-layout');
                 document.getElementById('gfx-header').style.display = 'none';
