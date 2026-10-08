@@ -1,0 +1,201 @@
+@font-face {
+    font-family: 'Marble';
+    src: url('Marble%20Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Marble';
+    src: url('Marble%20Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Marble';
+    src: url('Marble%20Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+:root {
+    --bg-color: rgba(67, 20, 7, 0.95); /* Deep warm brown/maroon */
+    --text-color: #fef08a; /* Light gold/yellow text */
+    --accent-color: #f59e0b; /* Vibrant orange/gold */
+    --border-color: #b45309; /* Burnt orange border */
+    --table-header: #78350f; /* Darker warm brown */
+    --even-row: rgba(120, 53, 15, 0.4);
+    --odd-row: rgba(67, 20, 7, 0.8);
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Marble', 'Roboto', sans-serif;
+    background: transparent;
+    color: var(--text-color);
+}
+
+.gfx-container {
+    background: var(--bg-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid var(--border-color);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.gfx-header {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #78350f;
+}
+
+.gfx-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.gfx-view {
+    display: none;
+}
+.gfx-view.active {
+    display: block;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th, .leaderboard-table td {
+    padding: 12px 16px;
+    text-align: left;
+}
+
+.leaderboard-table th {
+    background-color: var(--table-header);
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.leaderboard-table tr:nth-child(even) { background-color: var(--even-row); }
+.leaderboard-table tr:nth-child(odd) { background-color: var(--odd-row); }
+
+.player-info, .team-info { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #475569; }
+.name { font-weight: 700; font-size: 16px; }
+
+.score-under { color: #4ade80; font-weight: bold; }
+.score-over { color: #f87171; font-weight: bold; }
+.score-even { color: #94a3b8; font-weight: bold; }
+
+/* Ticker Styles */
+.ticker-layout {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+}
+
+.ticker-layout .gfx-view.active {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.ticker-label {
+    background: var(--accent-color);
+    color: #0f172a;
+    font-weight: 900;
+    font-size: 24px;
+    padding: 15px 30px;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+}
+
+.ticker-wrap {
+    flex-grow: 1;
+    overflow: hidden;
+    background: var(--table-header);
+    padding: 15px 0;
+    white-space: nowrap;
+}
+
+.ticker-move {
+    display: inline-block;
+    animation: ticker 40s linear infinite; /* slower */
+}
+
+.ticker-item {
+    display: inline-block;
+    padding: 0 40px;
+    font-size: 24px;
+    font-weight: 700;
+    border-right: 2px solid var(--border-color);
+}
+
+@keyframes ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Spotlight Styles */
+.spotlight-container {
+    display: flex;
+    padding: 30px;
+    gap: 30px;
+    background: linear-gradient(to right, #0f172a, #1e293b);
+}
+.spotlight-avatar img {
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    border: 3px solid var(--accent-color);
+    object-fit: cover;
+    background: #475569;
+}
+.spotlight-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.stat-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 80px;
+}
+.stat-box .label {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+.stat-box .value {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+}

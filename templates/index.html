@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Leaderboard Graphics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="gfx-container" id="gfx-main">
+        <header class="gfx-header" id="gfx-header">
+            <h1 id="tournament-name">Tournament Name</h1>
+            <h2 id="gfx-subtitle" style="margin: 0; color: #38bdf8; font-size: 16px;"></h2>
+        </header>
+
+        <!-- 1. Team Table -->
+        <div id="gfx-team_table" class="gfx-view active">
+            <table class="leaderboard-table">
+                <thead><tr><th>POS</th><th>TEAM</th><th>TO PAR</th><th>SCORE</th></tr></thead>
+                <tbody id="team-body"></tbody>
+            </table>
+        </div>
+
+        <!-- 2. Team Ticker -->
+        <div id="gfx-team_ticker" class="gfx-view">
+            <div class="ticker-label">GRPL</div>
+            <div class="ticker-wrap">
+                <div class="ticker-move" id="team-ticker-body"></div>
+            </div>
+        </div>
+
+        <!-- 3. Individual Table -->
+        <div id="gfx-individual_table" class="gfx-view">
+            <table class="leaderboard-table">
+                <thead><tr><th>POS</th><th>PLAYER</th><th>TO PAR</th><th>SCORE</th><th>HOLE</th></tr></thead>
+                <tbody id="individual-body"></tbody>
+            </table>
+        </div>
+
+        <!-- 4. Individual Ticker -->
+        <div id="gfx-individual_ticker" class="gfx-view">
+            <div class="ticker-label">GRPL</div>
+            <div class="ticker-wrap">
+                <div class="ticker-move" id="individual-ticker-body"></div>
+            </div>
+        </div>
+
+        <!-- 5. Player Spotlight -->
+        <div id="gfx-player_spotlight" class="gfx-view">
+            <div class="spotlight-container">
+                <div class="spotlight-avatar" id="spotlight-img"></div>
+                <div class="spotlight-details">
+                    <h1 id="spotlight-name" style="margin:0; font-size: 32px; color: #fff;">PLAYER NAME</h1>
+                    <h3 id="spotlight-team" style="margin:5px 0 15px 0; color: #94a3b8;">TEAM NAME</h3>
+                    
+                    <div style="display: flex; gap: 20px;">
+                        <div class="stat-box">
+                            <span class="label">POS</span>
+                            <span class="value" id="spotlight-pos">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">TO PAR</span>
+                            <span class="value" id="spotlight-topar">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">SCORE</span>
+                            <span class="value" id="spotlight-score">-</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="label">THRU</span>
+                            <span class="value" id="spotlight-hole">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

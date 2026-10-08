@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional GFX Control Panel</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 0; }
+        .header { background: #1e293b; padding: 20px 40px; border-bottom: 2px solid #3b82f6; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; color: #60a5fa; }
+        .container { max-width: 900px; margin: 40px auto; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .panel { background: #1e293b; border-radius: 12px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); border: 1px solid #334155; }
+        .panel h2 { margin-top: 0; font-size: 18px; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 20px; color: #94a3b8; }
+        
+        .btn { width: 100%; padding: 12px; margin-bottom: 10px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: white; background: #334155; }
+        .btn:hover { filter: brightness(1.2); }
+        .btn.active { background: #3b82f6; border: 2px solid #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        
+        .btn-success { background: #10b981; }
+        .btn-danger { background: #ef4444; }
+        
+        select { width: 100%; padding: 12px; border-radius: 6px; background: #0f172a; color: white; border: 1px solid #475569; margin-bottom: 15px; font-size: 14px; }
+        
+        .status-bar { grid-column: 1 / -1; background: #1e293b; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; border-left: 5px solid #3b82f6; }
+        
+        .open-gfx { color: #60a5fa; text-decoration: none; font-weight: bold; }
+        .open-gfx:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GFX CONTROLLER v2.0</h1>
+        <a href="/" target="_blank" class="open-gfx">Launch Output window &nearr;</a>
+    </div>
+
+    <div class="container">
+        <div class="status-bar" id="status-display">
+            Connecting to server...
+        </div>
+
+        <div class="panel">
+            <h2>MASTER VISIBILITY</h2>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-success" onclick="updateState({show_gfx: true})">SHOW GRAPHICS (ON AIR)</button>
+                <button class="btn btn-danger" onclick="updateState({show_gfx: false})">HIDE GRAPHICS (TAKE OUT)</button>
+            </div>
+        </div>
+
+        <div class="panel" style="grid-row: 2; grid-column: 1;">
+            <h2>SELECT GRAPHIC TYPE</h2>
+            <button id="btn-team_table" class="btn" onclick="updateState({gfx_type: 'team_table'})">Team Standings (Table)</button>
+            <button id="btn-team_ticker" class="btn" onclick="updateState({gfx_type: 'team_ticker'})">Team Standings (Ticker)</button>
+            <button id="btn-individual_table" class="btn" onclick="updateState({gfx_type: 'individual_table'})">Individual Leaders (Table)</button>
+            <button id="btn-individual_ticker" class="btn" onclick="updateState({gfx_type: 'individual_ticker'})">Individual Leaders (Ticker)</button>
+            <button id="btn-player_spotlight" class="btn" onclick="updateState({gfx_type: 'player_spotlight'})">Player Spotlight (Profile)</button>
+        </div>
+
+        <div class="panel" style="grid-row: 2; grid-column: 2;">
+            <h2>PLAYER SPOTLIGHT CONTROLS</h2>
+            <p style="font-size: 13px; color: #94a3b8; margin-top:0;">Select a player to display on the "Player Spotlight" graphic.</p>
+            <select id="player-select">
+                <option value="">Loading players...</option>
+            </select>
+            <button class="btn btn-success" onclick="setSpotlight()">Update Spotlight &amp; Show</button>
+        </div>
+    </div>
+
+    <script>
+        let currentState = {};
+
+        async function fetchState() {
+            try {
+                const response = await fetch('/api/state');
+                currentState = await response.json();
+                updateUI();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function fetchPlayers() {
+            try {
+                const response = await fetch('/api/players');
+                const data = await response.json();
+                if (data.status === 'success') {
+                    const select = document.getElementById('player-select');
+                    select.innerHTML = '<option value="">-- Select a Player --</option>';
+                    data.players.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = `${p.name} (${p.team})`;
+                        select.appendChild(opt);
+                    });
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function updateState(newStateData) {
+            try {
+                await fetch('/api/state', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newStateData)
+                });
+                fetchState();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function setSpotlight() {
+            const playerId = document.getElementById('player-select').value;
+            if (!playerId) {
+                alert("Please select a player first.");
+                return;
+            }
+            updateState({
+                gfx_type: 'player_spotlight',
+                spotlight_player_id: parseInt(playerId),
+                show_gfx: true
+            });
+        }
+
+        function updateUI() {
+            const statusBox = document.getElementById('status-display');
+            if (currentState.show_gfx) {
+                statusBox.textContent = `LIVE ON AIR - CURRENT GFX: ${currentState.gfx_type.toUpperCase()}`;
+                statusBox.style.borderLeftColor = '#10b981';
+                statusBox.style.color = '#10b981';
+            } else {
+                statusBox.textContent = `OFF AIR - PREVIEW: ${currentState.gfx_type.toUpperCase()}`;
+                statusBox.style.borderLeftColor = '#ef4444';
+                statusBox.style.color = '#ef4444';
+            }
+
+            // Update active buttons
+            document.querySelectorAll('.panel .btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById('btn-' + currentState.gfx_type);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            if (currentState.spotlight_player_id) {
+                document.getElementById('player-select').value = currentState.spotlight_player_id;
+            }
+        }
+
+        fetchPlayers();
+        fetchState();
+        setInterval(fetchState, 1500);
+    </script>
+</body>
+</html>
