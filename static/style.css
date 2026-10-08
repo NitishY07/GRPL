@@ -146,19 +146,19 @@ body {
 }
 
 /* Mini Board Styles */
-.mini-layout {
-    position: fixed;
-    bottom: 50px;
-    right: 50px;
-    width: 400px;
+.mini-board {
+    position: fixed !important;
+    bottom: 50px !important;
+    right: 50px !important;
+    width: 400px !important;
     max-width: 400px !important;
     margin: 0 !important;
     padding: 0 !important;
     background: rgba(0,0,0,0.8) !important; /* Dark solid box */
     border: 2px solid rgba(255,255,255,0.3) !important;
     border-radius: 8px !important;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
 }
-.mini-layout .gfx-header { display: none; }
 .mini-header {
     background: #b45309;
     color: white;

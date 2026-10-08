@@ -61,7 +61,16 @@ function renderGFX() {
     
     // Set active view
     document.querySelectorAll('.gfx-view').forEach(el => el.classList.remove('active'));
-    document.getElementById('gfx-' + currentGfxType).classList.add('active');
+    
+    if (currentGfxType === 'combo_spotlight_mini') {
+        const p = document.getElementById('gfx-player_spotlight');
+        const m = document.getElementById('gfx-mini_team_table');
+        if (p) p.classList.add('active');
+        if (m) m.classList.add('active');
+    } else {
+        const target = document.getElementById('gfx-' + currentGfxType);
+        if(target) target.classList.add('active');
+    }
 
     if (currentGfxType === 'team_table') {
         document.getElementById('gfx-subtitle').textContent = 'TEAM STANDINGS';
@@ -79,7 +88,8 @@ function renderGFX() {
                 </div>`;
         });
     }
-    else if (currentGfxType === 'mini_team_table') {
+    
+    if (currentGfxType === 'mini_team_table' || currentGfxType === 'combo_spotlight_mini') {
         const tbody = document.getElementById('mini-team-body');
         tbody.innerHTML = '';
         teamData.forEach(team => {
@@ -94,7 +104,8 @@ function renderGFX() {
                 </div>`;
         });
     }
-    else if (currentGfxType === 'team_ticker') {
+    
+    if (currentGfxType === 'team_ticker') {
         const ticker = document.getElementById('team-ticker-body');
         const content = teamData.map(team => {
             const bg = getTeamBackground(team.team_name);
@@ -125,7 +136,8 @@ function renderGFX() {
         ).join('');
         ticker.innerHTML = content + content; // Duplicate for seamless loop
     }
-    else if (currentGfxType === 'player_spotlight') {
+    
+    if (currentGfxType === 'player_spotlight' || currentGfxType === 'combo_spotlight_mini') {
         document.getElementById('gfx-subtitle').textContent = 'PLAYER SPOTLIGHT';
         const p = individualData.find(x => x.user_id === currentSpotlightId);
         if (p) {
@@ -186,11 +198,25 @@ async function pollState() {
                 gfxContainer.classList.add('ticker-layout');
                 document.getElementById('gfx-header').style.display = 'none';
             } else if (currentGfxType === 'mini_team_table') {
-                gfxContainer.classList.add('mini-layout');
                 document.getElementById('gfx-header').style.display = 'none';
+                gfxContainer.style.background = 'transparent';
+                gfxContainer.style.border = 'none';
+                gfxContainer.style.boxShadow = 'none';
+            } else if (currentGfxType === 'combo_spotlight_mini') {
+                document.getElementById('gfx-header').style.display = 'flex';
+                gfxContainer.style.background = '';
+                gfxContainer.style.border = '';
+                gfxContainer.style.boxShadow = '';
             } else if (currentGfxType === 'player_hole') {
                 gfxContainer.classList.add('hole-graphic-layout');
                 document.getElementById('gfx-header').style.display = 'none';
+                gfxContainer.style.background = 'transparent';
+                gfxContainer.style.border = 'none';
+                gfxContainer.style.boxShadow = 'none';
+            } else {
+                gfxContainer.style.background = '';
+                gfxContainer.style.border = '';
+                gfxContainer.style.boxShadow = '';
             }
             
             renderGFX(); // re-render if type changed
