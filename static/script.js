@@ -137,6 +137,45 @@ function renderGFX() {
             document.getElementById('spotlight-topar').textContent = p.over_display;
             document.getElementById('spotlight-score').textContent = p.net_display;
             document.getElementById('spotlight-hole').textContent = p.updated_hole || '-';
+            
+            // Generate dummy scorecard since real hole-by-hole data isn't in API yet
+            const scorecard = document.getElementById('spotlight-scorecard');
+            let scHtml = '';
+            // Just simulate 9 holes for a cleaner look or 18. Let's do 9 holes like the OUT/IN
+            const dummyScores = [
+                { par: 4, score: 4 }, // 0
+                { par: 4, score: 3 }, // -1
+                { par: 4, score: 4 }, // 0
+                { par: 3, score: 4 }, // +1
+                { par: 4, score: 2 }, // -2
+                { par: 5, score: 5 }, // 0
+                { par: 4, score: 6 }, // +2
+                { par: 3, score: 3 }, // 0
+                { par: 4, score: null } // not played
+            ];
+            
+            dummyScores.forEach((h, i) => {
+                let shapeClass = '';
+                let scoreText = h.score !== null ? h.score : '-';
+                if (h.score !== null) {
+                    const diff = h.score - h.par;
+                    if (diff <= -2) shapeClass = 'shape-outline shape-eagle';
+                    else if (diff === -1) shapeClass = 'shape-outline shape-birdie';
+                    else if (diff === 1) shapeClass = 'shape-outline shape-bogey';
+                    else if (diff >= 2) shapeClass = 'shape-outline shape-double';
+                }
+                
+                scHtml += `
+                    <div class="hole-col">
+                        <div class="hole-num">${i+1}</div>
+                        <div class="hole-score">
+                            ${shapeClass ? `<div class="${shapeClass}"></div>` : ''}
+                            <span style="z-index:1;">${scoreText}</span>
+                        </div>
+                    </div>`;
+            });
+            
+            scorecard.innerHTML = scHtml;
         }
     }
 }
