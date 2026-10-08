@@ -157,19 +157,24 @@ function renderGFX() {
     if (currentGfxType === 'player_hole' || currentGfxType === 'combo_hole_mini') {
         const p = individualData.find(x => x.user_id === currentSpotlightId);
         if (p) {
-            document.getElementById('ph-name').textContent = (p.lastname || p.firstname).toUpperCase();
+            // Apply team gradient background
+            const bg = getTeamBackground(p.team_name);
+            if (bg) {
+                document.getElementById('ph-bg').style.background = bg;
+            } else {
+                document.getElementById('ph-bg').style.background = 'rgba(0,0,0,0.8)';
+            }
+            
+            document.getElementById('ph-avatar').innerHTML = getAvatarHTML(p.profile_image, 70);
+            document.getElementById('ph-name').textContent = `${p.firstname} ${p.lastname}`;
+            document.getElementById('ph-team').textContent = p.team_name || "INDEPENDENT";
+            
             document.getElementById('ph-score').textContent = p.over_display;
-            document.getElementById('ph-score').style.background = (p.to_par < 0) ? '#b51c35' : (p.to_par > 0 ? '#3b82f6' : '#94a3b8');
+            document.getElementById('ph-score').style.background = (p.to_par < 0) ? 'rgba(181, 28, 53, 0.9)' : (p.to_par > 0 ? 'rgba(59, 130, 246, 0.9)' : 'rgba(0,0,0,0.5)');
             
-            const hole = p.updated_hole || '1';
-            let suffix = 'TH';
-            if(hole.endsWith('1') && hole !== '11') suffix = 'ST';
-            else if(hole.endsWith('2') && hole !== '12') suffix = 'ND';
-            else if(hole.endsWith('3') && hole !== '13') suffix = 'RD';
-            document.getElementById('ph-hole-label').textContent = `${hole}${suffix} HOLE`;
-            
-            // Dummy logic for 'FOR BIRDIE'
-            document.getElementById('ph-action').textContent = (p.to_par < 0) ? "FOR BIRDIE" : "FOR PAR";
+            document.getElementById('ph-pos').textContent = p.position;
+            document.getElementById('ph-hole').textContent = p.updated_hole || '-';
+            document.getElementById('ph-net').textContent = p.net_display;
         }
     }
 }

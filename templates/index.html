@@ -85,23 +85,20 @@
             </div>
         </div>
 
-        <!-- 6. Player on Hole -->
+        <!-- 6. Player on Hole (Mini Spotlight) -->
         <div id="gfx-player_hole" class="gfx-view hole-graphic-layout">
-            <div class="ph-top-row">
-                <div class="ph-name" id="ph-name">ÅBERG</div>
-                <div class="ph-score" id="ph-score">-3</div>
-            </div>
-            <div class="ph-mid-row">
-                <div class="ph-hole-label" id="ph-hole-label">13TH HOLE</div>
-                <div class="ph-shots-tracker">
-                    <span class="shot-dim">1</span>
-                    <span class="shot-dim">2</span>
-                    <span class="shot-active">3</span>
-                    <span class="shot-dim">4</span>
+            <div class="ph-top-row" id="ph-bg">
+                <div id="ph-avatar" class="ph-avatar"></div>
+                <div class="ph-name-col">
+                    <div class="ph-name" id="ph-name">PLAYER NAME</div>
+                    <div class="ph-team" id="ph-team">TEAM NAME</div>
                 </div>
+                <div class="ph-score" id="ph-score">E</div>
             </div>
             <div class="ph-bot-row">
-                <div class="ph-action" id="ph-action">FOR BIRDIE</div>
+                <div class="ph-stat">POS: <span id="ph-pos" style="color:white; font-weight:bold;">-</span></div>
+                <div class="ph-stat">HOLE: <span id="ph-hole" style="color:white; font-weight:bold;">-</span></div>
+                <div class="ph-stat">NET: <span id="ph-net" style="color:white; font-weight:bold;">-</span></div>
             </div>
         </div>
     </div>
