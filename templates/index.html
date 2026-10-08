@@ -16,10 +16,13 @@
 
         <!-- 1. Team Table -->
         <div id="gfx-team_table" class="gfx-view active">
-            <table class="leaderboard-table">
-                <thead><tr><th>POS</th><th>TEAM</th><th>TO PAR</th><th>SCORE</th></tr></thead>
-                <tbody id="team-body"></tbody>
-            </table>
+            <div class="table-header-pill">
+                <div class="col-rank">RANK</div>
+                <div class="col-team" style="font-size:13px; text-shadow:none;">TEAM NAME</div>
+                <div class="col-score" style="font-size:13px; text-shadow:none;">TO PAR</div>
+                <div class="col-score" style="font-size:13px; text-shadow:none;">SCORE</div>
+            </div>
+            <div id="team-body"></div>
         </div>
 
         <!-- 2. Team Ticker -->

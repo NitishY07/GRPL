@@ -69,14 +69,14 @@ function renderGFX() {
         tbody.innerHTML = '';
         teamData.forEach(team => {
             const bg = getTeamBackground(team.team_name);
-            const styleAttr = bg ? `style="background: ${bg};"` : '';
+            const styleAttr = bg ? `style="background: ${bg};"` : 'style="background: rgba(0,0,0,0.6);"';
             tbody.innerHTML += `
-                <tr ${styleAttr}>
-                    <td style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"><strong>${team.rank}</strong></td>
-                    <td style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"><div class="team-info">${getAvatarHTML(team.team_image)} <span class="name">${team.team_name}</span></div></td>
-                    <td class="${getScoreClass(team.total_par)}" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">${team.over_display}</td>
-                    <td style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">${team.net_display}</td>
-                </tr>`;
+                <div class="team-row-pill" ${styleAttr}>
+                    <div class="col-rank">${team.rank}</div>
+                    <div class="col-team">${getAvatarHTML(team.team_image)} <span>${team.team_name}</span></div>
+                    <div class="col-score ${getScoreClass(team.total_par)}">${team.over_display}</div>
+                    <div class="col-score">${team.net_display}</div>
+                </div>`;
         });
     }
     else if (currentGfxType === 'team_ticker') {
