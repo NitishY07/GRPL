@@ -141,6 +141,8 @@ body {
     max-width: 100% !important;
     border-radius: 0 !important;
     border: none !important;
+    padding: 0 !important;
+    background: rgba(67, 20, 7, 0.95) !important; /* Solid brown bar */
 }
 
 .ticker-layout .gfx-view.active {
@@ -165,22 +167,24 @@ body {
 .ticker-wrap {
     flex-grow: 1;
     overflow: hidden;
-    background: var(--table-header);
-    padding: 15px 0;
+    background: transparent;
     white-space: nowrap;
+    display: flex;
+    align-items: stretch;
 }
 
 .ticker-move {
-    display: inline-block;
+    display: flex;
+    align-items: stretch;
     animation: ticker 40s linear infinite; /* slower */
 }
 
 .ticker-item {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     padding: 0 40px;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
-    border-right: 2px solid var(--border-color);
 }
 
 @keyframes ticker {

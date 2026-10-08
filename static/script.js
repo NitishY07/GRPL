@@ -81,9 +81,11 @@ function renderGFX() {
     }
     else if (currentGfxType === 'team_ticker') {
         const ticker = document.getElementById('team-ticker-body');
-        const content = teamData.map(team => 
-            `<div class="ticker-item"><span style="color:#94a3b8">#${team.rank}</span> ${team.team_name} <span class="${getScoreClass(team.total_par)}">${team.over_display}</span></div>`
-        ).join('');
+        const content = teamData.map(team => {
+            const bg = getTeamBackground(team.team_name);
+            const styleAttr = bg ? `background: ${bg};` : 'background: rgba(0,0,0,0.6);';
+            return `<div class="ticker-item" style="padding: 0 30px; border-right: 1px solid rgba(255,255,255,0.2); ${styleAttr}"><span style="color:#fff; opacity:0.8; margin-right:10px;">#${team.rank}</span> ${team.team_name} <span class="${getScoreClass(team.total_par)}" style="margin-left:15px; font-weight:bold;">${team.over_display}</span></div>`;
+        }).join('');
         ticker.innerHTML = content + content; // Duplicate for seamless loop
     }
     else if (currentGfxType === 'individual_table') {
