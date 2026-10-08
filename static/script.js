@@ -181,48 +181,57 @@ async function pollState() {
         
         const gfxContainer = document.getElementById('gfx-main');
         
-        if (state.show_gfx) {
-            gfxContainer.style.opacity = '1';
-            gfxContainer.style.transform = 'translateY(0)';
-        } else {
-            gfxContainer.style.opacity = '0';
-            gfxContainer.style.transform = 'translateY(-20px)';
-        }
 
         if (state.gfx_type !== currentGfxType || state.spotlight_player_id !== currentSpotlightId) {
             currentGfxType = state.gfx_type;
             currentSpotlightId = state.spotlight_player_id;
             
             // Adjust layouts
-            gfxContainer.classList.remove('ticker-layout', 'mini-layout', 'hole-graphic-layout');
+            gfxContainer.classList.remove('ticker-layout', 'fullscreen-mode');
             document.getElementById('gfx-header').style.display = 'flex';
             
+            // Handle specific modes
             if (currentGfxType && currentGfxType.includes('ticker')) {
                 gfxContainer.classList.add('ticker-layout');
                 document.getElementById('gfx-header').style.display = 'none';
             } else if (currentGfxType === 'mini_team_table') {
+                gfxContainer.classList.add('fullscreen-mode');
                 document.getElementById('gfx-header').style.display = 'none';
-                gfxContainer.style.background = 'transparent';
-                gfxContainer.style.border = 'none';
-                gfxContainer.style.boxShadow = 'none';
             } else if (currentGfxType === 'combo_hole_mini') {
+                gfxContainer.classList.add('fullscreen-mode');
                 document.getElementById('gfx-header').style.display = 'none';
-                gfxContainer.style.background = 'transparent';
-                gfxContainer.style.border = 'none';
-                gfxContainer.style.boxShadow = 'none';
             } else if (currentGfxType === 'player_hole') {
-                gfxContainer.classList.add('hole-graphic-layout');
+                gfxContainer.classList.add('fullscreen-mode');
                 document.getElementById('gfx-header').style.display = 'none';
-                gfxContainer.style.background = 'transparent';
-                gfxContainer.style.border = 'none';
-                gfxContainer.style.boxShadow = 'none';
-            } else {
-                gfxContainer.style.background = '';
-                gfxContainer.style.border = '';
-                gfxContainer.style.boxShadow = '';
             }
             
+            
             renderGFX(); // re-render if type changed
+        }
+        
+        // Visibility (runs every tick)
+        if (state.show_gfx) {
+            if (gfxContainer.classList.contains('fullscreen-mode')) {
+                gfxContainer.classList.add('visible');
+                gfxContainer.classList.remove('hidden');
+                gfxContainer.style.opacity = '';
+                gfxContainer.style.transform = '';
+            } else {
+                gfxContainer.classList.remove('visible', 'hidden');
+                gfxContainer.style.opacity = '1';
+                gfxContainer.style.transform = 'translateY(0)';
+            }
+        } else {
+            if (gfxContainer.classList.contains('fullscreen-mode')) {
+                gfxContainer.classList.add('hidden');
+                gfxContainer.classList.remove('visible');
+                gfxContainer.style.opacity = '';
+                gfxContainer.style.transform = '';
+            } else {
+                gfxContainer.classList.remove('visible', 'hidden');
+                gfxContainer.style.opacity = '0';
+                gfxContainer.style.transform = 'translateY(-20px)';
+            }
         }
     } catch (error) {
         console.error('Error polling state:', error);
