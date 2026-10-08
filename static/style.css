@@ -33,16 +33,14 @@ body {
     margin: 0;
     padding: 40px;
     font-family: 'Marble', 'Roboto', sans-serif;
-    /* You can drop a file named 'bg.png' in the static folder to see it as a background here! */
-    background: url('bg.png') no-repeat center center fixed;
-    background-size: cover;
-    background-color: transparent; /* Fallback for vMix if bg.png is missing */
+    background-color: transparent; /* Keep full screen transparent for vMix */
     color: var(--text-color);
 }
 
 .gfx-container {
-    background: rgba(0, 0, 0, 0.15); /* Soft darkened area around the table */
-    padding: 25px;
+    background: url('bg.png') no-repeat center center;
+    background-size: cover;
+    padding: 25px 35px;
     border-radius: 16px;
     overflow: hidden;
     max-width: 950px;
@@ -50,7 +48,8 @@ body {
     transition: opacity 0.5s ease, transform 0.5s ease;
     opacity: 0;
     transform: translateY(-20px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    border: 2px solid #b45309; /* Nice border to frame the sunset panel */
 }
 
 .gfx-header {
