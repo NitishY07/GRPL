@@ -79,6 +79,21 @@ function renderGFX() {
                 </div>`;
         });
     }
+    else if (currentGfxType === 'mini_team_table') {
+        const tbody = document.getElementById('mini-team-body');
+        tbody.innerHTML = '';
+        teamData.forEach(team => {
+            const bg = getTeamBackground(team.team_name);
+            const styleAttr = bg ? `style="background: ${bg};"` : 'style="background: rgba(0,0,0,0.6);"';
+            tbody.innerHTML += `
+                <div class="mini-row" ${styleAttr}>
+                    <div class="m-rank">${team.rank}</div>
+                    <div class="m-name">${team.team_name}</div>
+                    <div class="m-topar ${getScoreClass(team.total_par)}">${team.over_display}</div>
+                    <div class="m-score">${team.net_display}</div>
+                </div>`;
+        });
+    }
     else if (currentGfxType === 'team_ticker') {
         const ticker = document.getElementById('team-ticker-body');
         const content = teamData.map(team => {
@@ -145,13 +160,16 @@ async function pollState() {
             currentGfxType = state.gfx_type;
             currentSpotlightId = state.spotlight_player_id;
             
-            // Adjust layout for tickers
-            if (currentGfxType.includes('ticker')) {
+            // Adjust layouts
+            gfxContainer.classList.remove('ticker-layout', 'mini-layout');
+            document.getElementById('gfx-header').style.display = 'flex';
+            
+            if (currentGfxType && currentGfxType.includes('ticker')) {
                 gfxContainer.classList.add('ticker-layout');
                 document.getElementById('gfx-header').style.display = 'none';
-            } else {
-                gfxContainer.classList.remove('ticker-layout');
-                document.getElementById('gfx-header').style.display = 'flex';
+            } else if (currentGfxType === 'mini_team_table') {
+                gfxContainer.classList.add('mini-layout');
+                document.getElementById('gfx-header').style.display = 'none';
             }
             
             renderGFX(); // re-render if type changed

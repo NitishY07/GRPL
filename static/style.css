@@ -145,6 +145,42 @@ body {
     background: rgba(67, 20, 7, 0.95) !important; /* Solid brown bar */
 }
 
+/* Mini Board Styles */
+.mini-layout {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    width: 400px;
+    max-width: 400px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: rgba(0,0,0,0.8) !important; /* Dark solid box */
+    border: 2px solid rgba(255,255,255,0.3) !important;
+    border-radius: 8px !important;
+}
+.mini-layout .gfx-header { display: none; }
+.mini-header {
+    background: #b45309;
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+}
+.mini-row {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.mini-row .m-rank { width: 30px; font-weight: bold; color: #94a3b8; }
+.mini-row .m-name { flex-grow: 1; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+.mini-row .m-topar { width: 40px; text-align: right; font-weight: bold; }
+.mini-row .m-score { width: 40px; text-align: right; }
+
+
 .ticker-layout .gfx-view.active {
     display: flex;
     align-items: stretch;
