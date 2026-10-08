@@ -58,6 +58,7 @@ body {
     box-shadow: none !important;
     padding: 0 !important;
     overflow: visible !important;
+    width: 100vw !important;
     max-width: 100vw !important;
     height: 100vh !important;
     margin: 0 !important;
@@ -318,7 +319,6 @@ body {
     overflow: hidden !important;
     background: transparent !important;
     border: none !important;
-    transform: translateX(50px);
 }
 .hole-graphic-layout .gfx-header { display: none; }
 
