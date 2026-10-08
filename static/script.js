@@ -43,6 +43,19 @@ async function fetchAllData() {
     }
 }
 
+const teamColors = {
+    'Ahmedabad Aces': 'linear-gradient(180deg, #021B45 50%, #6F7E34 100%)',
+    'Delhi Royals': 'linear-gradient(180deg, #442046 50%, #DCC6A5 100%)',
+    'Gurugram Titans': 'linear-gradient(180deg, #03110F 50%, #E0B937 100%)',
+    'Hyderabad Albatross': 'linear-gradient(180deg, #A8874D 50%, #556033 100%)',
+    'KHT Bangalore Eagles': 'linear-gradient(180deg, #04160F 50%, #D8B07A 100%)',
+    'Kolar Zioneers': 'linear-gradient(180deg, #E9CF63 50%, #E56A2B 100%)'
+};
+
+function getTeamBackground(teamName) {
+    return teamColors[teamName] || '';
+}
+
 function renderGFX() {
     if(!currentGfxType) return;
     
@@ -55,12 +68,14 @@ function renderGFX() {
         const tbody = document.getElementById('team-body');
         tbody.innerHTML = '';
         teamData.forEach(team => {
+            const bg = getTeamBackground(team.team_name);
+            const styleAttr = bg ? `style="background: ${bg};"` : '';
             tbody.innerHTML += `
-                <tr>
-                    <td><strong>${team.rank}</strong></td>
-                    <td><div class="team-info">${getAvatarHTML(team.team_image)} <span class="name">${team.team_name}</span></div></td>
-                    <td class="${getScoreClass(team.total_par)}">${team.over_display}</td>
-                    <td>${team.net_display}</td>
+                <tr ${styleAttr}>
+                    <td style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"><strong>${team.rank}</strong></td>
+                    <td style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);"><div class="team-info">${getAvatarHTML(team.team_image)} <span class="name">${team.team_name}</span></div></td>
+                    <td class="${getScoreClass(team.total_par)}" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">${team.over_display}</td>
+                    <td style="text-shadow: 1px 1px 3px rgba(0,0,0,0.8);">${team.net_display}</td>
                 </tr>`;
         });
     }
