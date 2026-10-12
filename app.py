@@ -143,8 +143,6 @@ def get_overall_standings():
                 for live_t in live_data["teams"]:
                     for ot in overall_teams:
                         if live_t["team_name"].lower().strip() == ot["team_name"].lower().strip():
-                            if live_t.get("net_display"):
-                                ot["legs"]["GUR"] = live_t["net_display"]
                             if live_t.get("team_image"):
                                 ot["team_image"] = live_t["team_image"]
     except Exception:
