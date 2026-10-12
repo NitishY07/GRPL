@@ -43,7 +43,7 @@ body {
     padding: 22px 28px;
     border-radius: 16px;
     overflow: hidden;
-    max-width: 820px;
+    max-width: 860px;
     margin: 30px auto 0 auto;
     transition: opacity 0.5s ease, transform 0.5s ease;
     opacity: 0;
@@ -92,76 +92,100 @@ body {
 }
 
 /* New Pill Layout for Rows */
+.table-header-pill, .team-row-pill {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px 100px;
+    align-items: center;
+    column-gap: 15px;
+    box-sizing: border-box;
+    width: 100%;
+}
 .table-header-pill {
-    display: flex;
     background: rgba(120, 53, 15, 0.9);
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 10px 22px;
     margin-bottom: 12px;
     font-size: 13px;
     font-weight: bold;
     color: #fef08a;
     text-transform: uppercase;
     box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-    align-items: center;
 }
 .team-row-pill {
-    display: flex;
-    align-items: center;
     border-radius: 12px;
-    padding: 8px 20px;
+    padding: 8px 22px;
     margin-bottom: 10px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 6px 12px rgba(0,0,0,0.5);
     color: white;
 }
 .col-rank { 
-    width: 45px; 
-    min-width: 45px; 
-    flex-shrink: 0; 
-    margin-right: 12px; 
+    width: 100%;
+    margin: 0;
     font-weight: 700; 
     font-size: 15px; 
     text-align: left; 
 }
+.table-header-pill .col-rank {
+    font-size: 12px;
+    font-weight: bold;
+}
 .col-team { 
-    flex-grow: 1; 
+    width: 100%;
+    min-width: 0;
     display: flex; 
     align-items: center; 
     gap: 12px; 
     font-size: 18px; 
     font-weight: 900; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.table-header-pill .col-team {
+    font-size: 12px;
+    font-weight: bold;
 }
 .col-score { 
-    width: 80px; 
-    min-width: 80px; 
-    flex-shrink: 0; 
+    width: 100%;
     text-align: center; 
     font-weight: bold; 
     font-size: 16px; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
 }
 
-/* Overall Season Standings Pill Rows */
+/* Overall Season Standings Pill Rows (CSS Grid for Perfect Column Alignment) */
+.overall-header-pill, .overall-row-pill {
+    display: grid;
+    grid-template-columns: 42px 1fr 48px 48px 48px 48px 48px 48px 55px;
+    align-items: center;
+    column-gap: 8px;
+    box-sizing: border-box;
+    width: 100%;
+}
 .overall-header-pill {
-    padding: 10px 18px;
+    padding: 10px 22px;
+    background: rgba(120, 53, 15, 0.9);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fef08a;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.4);
 }
 .overall-row-pill {
-    display: flex;
-    align-items: center;
     border-radius: 12px;
-    padding: 8px 18px;
+    padding: 8px 22px;
     margin-bottom: 10px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 6px 12px rgba(0,0,0,0.5);
     color: white;
 }
 .overall-row-pill .col-rank, .overall-header-pill .col-rank {
-    width: 40px;
-    min-width: 40px;
-    flex-shrink: 0;
-    margin-right: 10px;
+    width: 100%;
+    margin: 0;
     font-weight: 700;
     font-size: 15px;
     text-align: left;
@@ -171,10 +195,8 @@ body {
     font-weight: bold;
 }
 .overall-row-pill .col-team, .overall-header-pill .col-team {
-    width: 250px;
-    min-width: 250px;
-    flex-grow: 0;
-    flex-shrink: 0;
+    width: 100%;
+    min-width: 0;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -185,14 +207,17 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.overall-row-pill .col-team span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .overall-header-pill .col-team {
     font-size: 12px;
     font-weight: bold;
 }
 .col-leg {
-    width: 48px;
-    min-width: 48px;
-    flex-shrink: 0;
+    width: 100%;
     text-align: center;
     font-weight: 700;
     font-size: 15px;
@@ -205,9 +230,7 @@ body {
     color: #fef08a;
 }
 .col-pts {
-    width: 50px;
-    min-width: 50px;
-    flex-shrink: 0;
+    width: 100%;
     text-align: right;
     font-weight: 900;
     font-size: 18px;
