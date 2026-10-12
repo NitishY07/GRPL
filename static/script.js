@@ -16,6 +16,7 @@ function getAvatarHTML(url, size=32) {
 let tournamentData = null;
 let individualData = [];
 let teamData = [];
+let overallData = [];
 let currentGfxType = null;
 let currentSpotlightId = null;
 
@@ -26,6 +27,9 @@ async function fetchAllData() {
         
         const teamRes = await fetch('/api/team_leaderboard');
         const teamJson = await teamRes.json();
+
+        const overallRes = await fetch('/api/overall_standings');
+        const overallJson = await overallRes.json();
         
         if (indJson.status === 'success') {
             tournamentData = indJson.tournament_details;
@@ -35,6 +39,10 @@ async function fetchAllData() {
         
         if (teamJson.status === 'success') {
             teamData = teamJson.teams || [];
+        }
+
+        if (overallJson.status === 'success') {
+            overallData = overallJson.standings || [];
         }
         
         renderGFX();
@@ -85,6 +93,32 @@ function renderGFX() {
                     <div class="col-team">${getAvatarHTML(team.team_image)} <span>${team.team_name}</span></div>
                     <div class="col-score ${getScoreClass(team.total_par)}">${team.over_display}</div>
                     <div class="col-score">${team.net_display}</div>
+                </div>`;
+        });
+    }
+
+    if (currentGfxType === 'overall_table') {
+        document.getElementById('gfx-subtitle').textContent = 'OVERALL SEASON STANDINGS';
+        const tbody = document.getElementById('overall-body');
+        tbody.innerHTML = '';
+        overallData.forEach(item => {
+            const bg = getTeamBackground(item.team_name);
+            const styleAttr = bg ? `style="background: ${bg};"` : 'style="background: rgba(0,0,0,0.6);"';
+            
+            const matchingTeam = teamData.find(t => t.team_name.toLowerCase().trim() === item.team_name.toLowerCase().trim());
+            const logoUrl = (matchingTeam && matchingTeam.team_image) ? matchingTeam.team_image : item.team_image;
+
+            tbody.innerHTML += `
+                <div class="overall-row-pill" ${styleAttr}>
+                    <div class="col-rank">${item.rank}</div>
+                    <div class="col-team">${getAvatarHTML(logoUrl)} <span>${item.team_name}</span></div>
+                    <div class="col-leg">${(item.legs && item.legs.KLR) || '-'}</div>
+                    <div class="col-leg">${(item.legs && item.legs.HYD) || '-'}</div>
+                    <div class="col-leg">${(item.legs && item.legs.BLR) || '-'}</div>
+                    <div class="col-leg">${(item.legs && item.legs.GUR) || '-'}</div>
+                    <div class="col-leg">${(item.legs && item.legs.AMD) || '-'}</div>
+                    <div class="col-leg">${(item.legs && item.legs.DEL) || '-'}</div>
+                    <div class="col-pts">${item.points || '-'}</div>
                 </div>`;
         });
     }

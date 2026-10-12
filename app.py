@@ -90,5 +90,67 @@ def get_team_leaderboard():
     except requests.exceptions.RequestException as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/api/overall_standings')
+def get_overall_standings():
+    overall_teams = [
+        {
+            "rank": 1,
+            "team_name": "Hyderabad Albatross",
+            "legs": {"KLR": "+570", "HYD": "+547", "BLR": "+566", "GUR": "-", "AMD": "-", "DEL": "-"},
+            "points": "+26"
+        },
+        {
+            "rank": 2,
+            "team_name": "Ahmedabad Aces",
+            "legs": {"KLR": "+561", "HYD": "+556", "BLR": "+590", "GUR": "-", "AMD": "-", "DEL": "-"},
+            "points": "+20"
+        },
+        {
+            "rank": 3,
+            "team_name": "KHT Bangalore Eagles",
+            "legs": {"KLR": "+565", "HYD": "+561", "BLR": "+582", "GUR": "-", "AMD": "-", "DEL": "-"},
+            "points": "+16"
+        },
+        {
+            "rank": 4,
+            "team_name": "Delhi Royals",
+            "legs": {"KLR": "+577", "HYD": "+559", "BLR": "+570", "GUR": "-", "AMD": "-", "DEL": "-"},
+            "points": "+15"
+        },
+        {
+            "rank": 5,
+            "team_name": "Kolar Zioneers",
+            "legs": {"KLR": "+576", "HYD": "+579", "BLR": "+572", "GUR": "-", "AMD": "-", "DEL": "-"},
+            "points": "+9"
+        },
+        {
+            "rank": 6,
+            "team_name": "Gurugram Titans",
+            "legs": {"KLR": "+571", "HYD": "+574", "BLR": "+596", "GUR": "-", "AMD": "-", "DEL": "-"},
+            "points": "+7"
+        }
+    ]
+
+    headers = {
+        "X-Access-Key": API_KEY,
+        "Accept": "application/json"
+    }
+    try:
+        response = requests.get(f"{BASE_URL}/team_leaderboard?tournament_id={TOURNAMENT_ID}", headers=headers, verify=False, timeout=3)
+        if response.status_code == 200:
+            live_data = response.json()
+            if "teams" in live_data:
+                for live_t in live_data["teams"]:
+                    for ot in overall_teams:
+                        if live_t["team_name"].lower().strip() == ot["team_name"].lower().strip():
+                            if live_t.get("net_display"):
+                                ot["legs"]["GUR"] = live_t["net_display"]
+                            if live_t.get("team_image"):
+                                ot["team_image"] = live_t["team_image"]
+    except Exception:
+        pass
+
+    return jsonify({"status": "success", "standings": overall_teams})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=5000)
