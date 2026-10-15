@@ -10,6 +10,8 @@ app = Flask(__name__)
 # Using environment variables for credentials to keep them secure
 API_KEY = os.environ.get("API_KEY", "7c87d5a052a886e91c46465f2c24a0e1")
 TOURNAMENT_ID = os.environ.get("TOURNAMENT_ID", "201")
+if TOURNAMENT_ID in ["184", "195"]:
+    TOURNAMENT_ID = "201"
 BASE_URL = "https://4moles.com/api/v1"
 
 # GFX State
