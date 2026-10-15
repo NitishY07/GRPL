@@ -9,14 +9,15 @@ app = Flask(__name__)
 
 # Using environment variables for credentials to keep them secure
 API_KEY = os.environ.get("API_KEY", "7c87d5a052a886e91c46465f2c24a0e1")
-TOURNAMENT_ID = os.environ.get("TOURNAMENT_ID", "184")
+TOURNAMENT_ID = os.environ.get("TOURNAMENT_ID", "201")
 BASE_URL = "https://4moles.com/api/v1"
 
 # GFX State
 gfx_state = {
     "show_gfx": False,
     "gfx_type": "team_table", # team_table, team_ticker, individual_table, individual_ticker, player_spotlight
-    "spotlight_player_id": None
+    "spotlight_player_id": None,
+    "tournament_id": TOURNAMENT_ID
 }
 
 @app.route('/')
@@ -29,6 +30,7 @@ def admin():
 
 @app.route('/api/state', methods=['GET', 'POST'])
 def state():
+    global TOURNAMENT_ID
     from flask import request
     if request.method == 'POST':
         data = request.json
@@ -38,7 +40,11 @@ def state():
             gfx_state['gfx_type'] = data['gfx_type']
         if 'spotlight_player_id' in data:
             gfx_state['spotlight_player_id'] = data['spotlight_player_id']
+        if 'tournament_id' in data and data['tournament_id']:
+            TOURNAMENT_ID = str(data['tournament_id'])
+            gfx_state['tournament_id'] = TOURNAMENT_ID
         return jsonify({"status": "success", "state": gfx_state})
+    gfx_state['tournament_id'] = TOURNAMENT_ID
     return jsonify(gfx_state)
 
 @app.route('/api/players')

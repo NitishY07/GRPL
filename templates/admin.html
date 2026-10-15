@@ -68,6 +68,13 @@
                 <option value="">Loading players...</option>
             </select>
             <button class="btn btn-success" onclick="setSpotlight()">Update Player Selection</button>
+
+            <h2 style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">TOURNAMENT ID</h2>
+            <p style="font-size: 13px; color: #94a3b8; margin-top:0;">Active 4moles Tournament ID:</p>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="tournament-id-input" style="padding: 10px; background: #0f172a; border: 1px solid #475569; color: white; border-radius: 6px; width: 100px; font-size: 16px; font-weight: bold;">
+                <button class="btn" style="background:#0284c7; flex-grow: 1; margin-bottom: 0;" onclick="setTournamentId()">Switch Tournament</button>
+            </div>
         </div>
     </div>
 
@@ -127,6 +134,20 @@
             });
         }
 
+        function setTournamentId() {
+            const tid = document.getElementById('tournament-id-input').value;
+            if (!tid) {
+                alert("Please enter a valid Tournament ID.");
+                return;
+            }
+            updateState({
+                tournament_id: parseInt(tid)
+            });
+            setTimeout(() => {
+                fetchPlayers();
+            }, 600);
+        }
+
         function updateUI() {
             const statusBox = document.getElementById('status-display');
             if (currentState.show_gfx) {
@@ -146,6 +167,10 @@
 
             if (currentState.spotlight_player_id) {
                 document.getElementById('player-select').value = currentState.spotlight_player_id;
+            }
+
+            if (currentState.tournament_id && document.activeElement !== document.getElementById('tournament-id-input')) {
+                document.getElementById('tournament-id-input').value = currentState.tournament_id;
             }
         }
 
