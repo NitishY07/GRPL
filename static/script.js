@@ -144,7 +144,11 @@ function renderGFX() {
         const content = teamData.map(team => {
             const bg = getTeamBackground(team.team_name);
             const styleAttr = bg ? `background: ${bg};` : 'background: rgba(0,0,0,0.6);';
-            return `<div class="ticker-item" style="padding: 0 30px; border-right: 1px solid rgba(255,255,255,0.2); ${styleAttr}"><span style="color:#fff; opacity:0.8; margin-right:10px;">#${team.rank}</span> ${team.team_name} <span class="${getScoreClass(team.total_par)}" style="margin-left:15px; font-weight:bold;">${team.over_display}</span></div>`;
+            return `<div class="ticker-item" style="border-right: 1px solid rgba(255,255,255,0.25); ${styleAttr}">
+                <span class="ticker-rank">#${team.rank}</span>
+                <span class="ticker-name">${team.team_name}</span>
+                <span class="ticker-score-badge ${getScoreClass(team.total_par)}">${team.over_display}</span>
+            </div>`;
         }).join('');
         ticker.innerHTML = content + content; // Duplicate for seamless loop
     }
@@ -167,9 +171,16 @@ function renderGFX() {
     
     if (currentGfxType === 'individual_ticker') {
         const ticker = document.getElementById('individual-ticker-body');
-        const content = individualData.slice(0, 20).map(p => 
-            `<div class="ticker-item"><span style="color:#94a3b8">#${p.position}</span> ${p.firstname} ${p.lastname} <span class="${getScoreClass(p.to_par)}">${p.over_display}</span></div>`
-        ).join('');
+        const content = individualData.slice(0, 20).map(p => {
+            const bg = getTeamBackground(p.team_name);
+            const styleAttr = bg ? `background: ${bg};` : 'background: rgba(0,0,0,0.6);';
+            const posBadge = (p.position && p.position !== '-') ? `#${p.position}` : '-';
+            return `<div class="ticker-item" style="border-right: 1px solid rgba(255,255,255,0.25); ${styleAttr}">
+                <span class="ticker-rank">${posBadge}</span>
+                <span class="ticker-name">${p.firstname} ${p.lastname}</span>
+                <span class="ticker-score-badge ${getScoreClass(p.to_par)}">${p.over_display}</span>
+            </div>`;
+        }).join('');
         ticker.innerHTML = content + content; // Duplicate for seamless loop
     }
     
@@ -213,6 +224,18 @@ function renderGFX() {
     }
 }
 
+// Standalone GFX parameter check
+const urlParams = new URLSearchParams(window.location.search);
+let pathGfx = null;
+const pathname = window.location.pathname;
+if (pathname.startsWith('/gfx/')) {
+    pathGfx = pathname.replace('/gfx/', '').replace('/', '').trim();
+}
+const lockedGfxType = urlParams.get('gfx') || pathGfx;
+if (lockedGfxType) {
+    currentGfxType = lockedGfxType;
+}
+
 async function pollState() {
     try {
         const response = await fetch('/api/state');
@@ -220,9 +243,11 @@ async function pollState() {
         
         const gfxContainer = document.getElementById('gfx-main');
         
+        const targetGfxType = lockedGfxType || state.gfx_type;
+        const targetShowGfx = lockedGfxType ? true : state.show_gfx;
 
-        if (state.gfx_type !== currentGfxType || state.spotlight_player_id !== currentSpotlightId) {
-            currentGfxType = state.gfx_type;
+        if (targetGfxType !== currentGfxType || state.spotlight_player_id !== currentSpotlightId) {
+            currentGfxType = targetGfxType;
             currentSpotlightId = state.spotlight_player_id;
             
             // Adjust layouts
@@ -244,12 +269,11 @@ async function pollState() {
                 document.getElementById('gfx-header').style.display = 'none';
             }
             
-            
             renderGFX(); // re-render if type changed
         }
         
         // Visibility (runs every tick)
-        if (state.show_gfx) {
+        if (targetShowGfx) {
             if (gfxContainer.classList.contains('fullscreen-mode')) {
                 gfxContainer.classList.add('visible');
                 gfxContainer.classList.remove('hidden');

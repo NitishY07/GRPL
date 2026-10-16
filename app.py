@@ -26,6 +26,10 @@ gfx_state = {
 def index():
     return render_template('index.html')
 
+@app.route('/gfx/<gfx_type>')
+def standalone_gfx(gfx_type):
+    return render_template('index.html')
+
 @app.route('/admin')
 def admin():
     return render_template('admin.html')

@@ -365,9 +365,42 @@ body {
 .ticker-item {
     display: flex;
     align-items: center;
-    padding: 0 40px;
+    padding: 0 35px;
     font-size: 20px;
     font-weight: 700;
+}
+
+.ticker-rank {
+    color: #fef08a;
+    font-weight: 700;
+    font-size: 16px;
+    margin-right: 14px;
+    opacity: 0.9;
+    flex-shrink: 0;
+}
+
+.ticker-name {
+    font-weight: 900;
+    font-size: 19px;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    white-space: nowrap;
+}
+
+.ticker-score-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    margin-left: 24px;
+    padding: 3px 14px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.55);
+    font-weight: 900;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    flex-shrink: 0;
 }
 
 @keyframes ticker {
