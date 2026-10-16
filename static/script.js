@@ -304,8 +304,8 @@ async function pollState() {
 // Initial load
 fetchAllData();
 
-// Data refresh every 30 seconds
-setInterval(fetchAllData, 30000);
+// Data refresh every 10 seconds for live scoring updates
+setInterval(fetchAllData, 10000);
 
 // Fast poll for control panel responsiveness
 setInterval(pollState, 1000);
