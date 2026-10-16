@@ -20,21 +20,28 @@ let overallData = [];
 let currentGfxType = null;
 let currentSpotlightId = null;
 
+let isFetchingData = false;
 async function fetchAllData() {
+    if (isFetchingData) return;
+    isFetchingData = true;
     try {
-        const indRes = await fetch('/api/leaderboard');
-        const indJson = await indRes.json();
-        
-        const teamRes = await fetch('/api/team_leaderboard');
-        const teamJson = await teamRes.json();
+        const [indRes, teamRes, overallRes] = await Promise.all([
+            fetch('/api/leaderboard'),
+            fetch('/api/team_leaderboard'),
+            fetch('/api/overall_standings')
+        ]);
 
-        const overallRes = await fetch('/api/overall_standings');
-        const overallJson = await overallRes.json();
+        const [indJson, teamJson, overallJson] = await Promise.all([
+            indRes.json(),
+            teamRes.json(),
+            overallRes.json()
+        ]);
         
         if (indJson.status === 'success') {
             tournamentData = indJson.tournament_details;
             individualData = indJson.scores || [];
-            document.getElementById('tournament-name').textContent = tournamentData.name;
+            const tNameEl = document.getElementById('tournament-name');
+            if (tNameEl && tournamentData) tNameEl.textContent = tournamentData.name;
         }
         
         if (teamJson.status === 'success') {
@@ -48,6 +55,8 @@ async function fetchAllData() {
         renderGFX();
     } catch(e) {
         console.error("Error fetching data", e);
+    } finally {
+        isFetchingData = false;
     }
 }
 
@@ -236,9 +245,13 @@ if (lockedGfxType) {
     currentGfxType = lockedGfxType;
 }
 
+let isPollingState = false;
 async function pollState() {
+    if (isPollingState) return;
+    isPollingState = true;
     try {
         const response = await fetch('/api/state');
+        if (!response.ok) return;
         const state = await response.json();
         
         const gfxContainer = document.getElementById('gfx-main');
@@ -298,6 +311,8 @@ async function pollState() {
         }
     } catch (error) {
         console.error('Error polling state:', error);
+    } finally {
+        isPollingState = false;
     }
 }
 

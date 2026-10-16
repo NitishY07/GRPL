@@ -206,33 +206,47 @@
         }
 
         let currentState = {};
+        let isFetchingState = false;
 
         async function fetchState() {
+            if (isFetchingState) return;
+            isFetchingState = true;
             try {
                 const response = await fetch('/api/state');
-                currentState = await response.json();
-                updateUI();
+                if (response.ok) {
+                    currentState = await response.json();
+                    updateUI();
+                }
             } catch (e) {
                 console.error(e);
+            } finally {
+                isFetchingState = false;
             }
         }
 
+        let isFetchingPlayers = false;
         async function fetchPlayers() {
+            if (isFetchingPlayers) return;
+            isFetchingPlayers = true;
             try {
                 const response = await fetch('/api/players');
-                const data = await response.json();
-                if (data.status === 'success') {
-                    const select = document.getElementById('player-select');
-                    select.innerHTML = '<option value="">-- Select a Player --</option>';
-                    data.players.forEach(p => {
-                        const opt = document.createElement('option');
-                        opt.value = p.id;
-                        opt.textContent = `${p.name} (${p.team})`;
-                        select.appendChild(opt);
-                    });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        const select = document.getElementById('player-select');
+                        select.innerHTML = '<option value="">-- Select a Player --</option>';
+                        data.players.forEach(p => {
+                            const opt = document.createElement('option');
+                            opt.value = p.id;
+                            opt.textContent = `${p.name} (${p.team})`;
+                            select.appendChild(opt);
+                        });
+                    }
                 }
             } catch(e) {
                 console.error(e);
+            } finally {
+                isFetchingPlayers = false;
             }
         }
 

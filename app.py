@@ -2,6 +2,8 @@ import os
 import requests
 from flask import Flask, render_template, jsonify
 from dotenv import load_dotenv
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 load_dotenv()
 
@@ -53,6 +55,33 @@ def state():
     gfx_state['tournament_id'] = TOURNAMENT_ID
     return jsonify(gfx_state)
 
+import time
+
+# In-memory API cache to prevent rate-limiting and connection blocking
+api_cache = {}
+CACHE_TTL = 4  # seconds
+
+def fetch_4moles_data(url, headers):
+    now = time.time()
+    cache_entry = api_cache.get(url)
+    if cache_entry and (now - cache_entry['time'] < CACHE_TTL):
+        return cache_entry['data']
+    try:
+        response = requests.get(url, headers=headers, verify=False, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            api_cache[url] = {'data': data, 'time': now}
+            return data
+        elif cache_entry:
+            return cache_entry['data']
+        else:
+            response.raise_for_status()
+    except Exception as e:
+        print(f"4moles fetch error for {url}: {e}")
+        if cache_entry:
+            return cache_entry['data']
+        raise
+
 @app.route('/api/players')
 def get_players():
     # Helper to get player list for the dropdown
@@ -61,11 +90,9 @@ def get_players():
         "Accept": "application/json"
     }
     try:
-        response = requests.get(f"{BASE_URL}/view_leaderboard?tournament_id={TOURNAMENT_ID}", headers=headers, verify=False)
-        response.raise_for_status()
-        data = response.json()
+        data = fetch_4moles_data(f"{BASE_URL}/view_leaderboard?tournament_id={TOURNAMENT_ID}", headers)
         players = []
-        if "scores" in data:
+        if data and "scores" in data:
             for p in data["scores"]:
                 players.append({
                     "id": p["user_id"],
@@ -83,10 +110,9 @@ def get_leaderboard():
         "Accept": "application/json"
     }
     try:
-        response = requests.get(f"{BASE_URL}/view_leaderboard?tournament_id={TOURNAMENT_ID}", headers=headers, verify=False)
-        response.raise_for_status()
-        return jsonify(response.json())
-    except requests.exceptions.RequestException as e:
+        data = fetch_4moles_data(f"{BASE_URL}/view_leaderboard?tournament_id={TOURNAMENT_ID}", headers)
+        return jsonify(data)
+    except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/team_leaderboard')
@@ -96,10 +122,9 @@ def get_team_leaderboard():
         "Accept": "application/json"
     }
     try:
-        response = requests.get(f"{BASE_URL}/team_leaderboard?tournament_id={TOURNAMENT_ID}", headers=headers, verify=False)
-        response.raise_for_status()
-        return jsonify(response.json())
-    except requests.exceptions.RequestException as e:
+        data = fetch_4moles_data(f"{BASE_URL}/team_leaderboard?tournament_id={TOURNAMENT_ID}", headers)
+        return jsonify(data)
+    except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/overall_standings')
@@ -148,19 +173,17 @@ def get_overall_standings():
         "Accept": "application/json"
     }
     try:
-        response = requests.get(f"{BASE_URL}/team_leaderboard?tournament_id={TOURNAMENT_ID}", headers=headers, verify=False, timeout=3)
-        if response.status_code == 200:
-            live_data = response.json()
-            if "teams" in live_data:
-                for live_t in live_data["teams"]:
-                    for ot in overall_teams:
-                        if live_t["team_name"].lower().strip() == ot["team_name"].lower().strip():
-                            if live_t.get("team_image"):
-                                ot["team_image"] = live_t["team_image"]
-    except Exception:
-        pass
+        live_data = fetch_4moles_data(f"{BASE_URL}/team_leaderboard?tournament_id={TOURNAMENT_ID}", headers)
+        if live_data and "teams" in live_data:
+            for live_t in live_data["teams"]:
+                for ot in overall_teams:
+                    if live_t["team_name"].lower().strip() == ot["team_name"].lower().strip():
+                        if live_t.get("team_image"):
+                            ot["team_image"] = live_t["team_image"]
+    except Exception as e:
+        print(f"Error updating overall standings logos: {e}")
 
     return jsonify({"status": "success", "standings": overall_teams})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
+    app.run(host='0.0.0.0', debug=True, port=5000, threaded=True)
