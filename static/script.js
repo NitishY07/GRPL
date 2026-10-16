@@ -153,10 +153,11 @@ function renderGFX() {
         const content = teamData.map(team => {
             const bg = getTeamBackground(team.team_name);
             const styleAttr = bg ? `background: ${bg};` : 'background: rgba(0,0,0,0.6);';
+            const pts = team.net_display || (team.total_score !== undefined && team.total_score !== null ? (team.total_score > 0 ? `+${team.total_score}` : `${team.total_score}`) : (team.over_display || '-'));
             return `<div class="ticker-item" style="border-right: 1px solid rgba(255,255,255,0.25); ${styleAttr}">
                 <span class="ticker-rank">#${team.rank}</span>
                 <span class="ticker-name">${team.team_name}</span>
-                <span class="ticker-score-badge ${getScoreClass(team.total_par)}">${team.over_display}</span>
+                <span class="ticker-score-badge">${pts}</span>
             </div>`;
         }).join('');
         ticker.innerHTML = content + content; // Duplicate for seamless loop

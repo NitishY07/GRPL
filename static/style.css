@@ -398,10 +398,15 @@ body {
     background: rgba(0, 0, 0, 0.55);
     font-weight: 900;
     font-size: 18px;
+    color: #fef08a;
     box-shadow: 0 2px 5px rgba(0,0,0,0.4);
     border: 1px solid rgba(255, 255, 255, 0.15);
     flex-shrink: 0;
 }
+
+.ticker-score-badge.score-under { color: #4ade80 !important; }
+.ticker-score-badge.score-over { color: #f87171 !important; }
+.ticker-score-badge.score-even { color: #94a3b8 !important; }
 
 @keyframes ticker {
     0%   { transform: translateX(0); }
